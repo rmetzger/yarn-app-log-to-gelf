@@ -71,7 +71,7 @@ public class Loader {
                     if(logMatcher.find()) {
                         // we matched a line. Log current line
                         if(level != null) {
-                            LOG.info("Parsed log {} {} {} '{}'", date, level, clazz, message);
+                            LOG.debug("Parsed log {} {} {} '{}'", date, level, clazz, message);
                             GelfMessageBuilder builder = new GelfMessageBuilder(message, host);
                             builder.level(getLoglevel(level));
                             builder.timestamp(sdf.parse(date).getTime());
