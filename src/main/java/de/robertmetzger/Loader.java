@@ -26,6 +26,7 @@ public class Loader {
     private static final Logger LOG = LoggerFactory.getLogger(Loader.class);
     public static void main( String[] args ) throws InterruptedException, IOException, ParseException {
         final ParameterTool pt = ParameterTool.fromArgs(args);
+        final String logIdentifier = pt.get("logIdentifier", null);
 
         LOG.info("Welcome to the data loader {}", pt.toMap());
         final GelfConfiguration config = new GelfConfiguration(new InetSocketAddress(pt.getRequired("host"), pt.getInt("port", 11201)))
@@ -76,6 +77,9 @@ public class Loader {
                             builder.timestamp(sdf.parse(date).getTime());
                             builder.additionalField("log_source", "yarn-app-log-to-gelf");
                             builder.additionalField("yarn_container", container);
+                            if(logIdentifier != null) {
+                                builder.additionalField("log_identifier", logIdentifier);
+                            }
                             transport.send(builder.build());
                         } else {
                             LOG.info("Incomplete log {} {} {} '{}'", date, level, clazz, message);
